@@ -148,5 +148,19 @@
         <button type="button" onclick="izracunajRezultat()">Saznaj rezultat</button>
     </form>
     <div id="rezultat"></div>
+    document.addEventListener("DOMContentLoaded", function () {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            
+            if (checkedCount > 3) {
+                this.checked = false; // Sprječava više od 3 odabira
+                alert("Možeš odabrati najviše 3 odgovora!");
+            }
+        });
+    });
+});
 </body>
 </html>

@@ -3,150 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kviz - Na kojeg Humansa najviše nalikuješ?</title>
+    <title>Kviz - Humans of FSB</title>
     <style>
-        /* Osnovni stilovi */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            margin: 20px;
-            color: #333;
-            text-align: center;
-        }
-        h1 {
-            color: #4CAF50;
-        }
-        form {
-            max-width: 600px;
-            margin: auto;
-            text-align: left;
-        }
-        label {
-            display: block;
-            font-size: 18px;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #e0f7fa;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        label:hover {
-            background-color: #b2ebf2;
-        }
-        input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.5);
-            accent-color: #4CAF50;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            font-size: 18px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
-        #rezultat {
-            margin-top: 20px;
-            font-size: 24px;
-            color: #4CAF50;
-            opacity: 0;
-            transition: opacity 1s;
-        }
-        #rezultat.show {
-            opacity: 1;
-        }
-        /* Link stil unutar rezultata */
-        #rezultat a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-        #rezultat a:hover {
-            text-decoration: underline;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .question { margin: 10px 0; }
+        .result { margin-top: 20px; font-weight: bold; display: none; }
     </style>
-    <script>
-        const osobe = {
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38127' target='_blank'>Bartol Bućan, student</a>": [1, 2, 6, 16, 18],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38168' target='_blank'>Bruno Dogančić, viši asistent</a>": [3, 4, 11, 14, 15],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38198' target='_blank'>Marko Mimica, viši asistent</a>": [5, 6, 9, 10, 14],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38234' target='_blank'>Nikola Mikšik, student</a>": [6, 7, 8, 16, 17],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38331' target='_blank'>Lucija Marijetić, studentica</a>": [9, 10, 12, 13, 19],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38374' target='_blank'>Hrvoje Mikulčić, iskusni istraživač na projektu</a>": [5, 11, 12, 13, 14],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38473' target='_blank'>Dominik Matišin, student</a>": [2, 7, 10, 12, 18],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38517' target='_blank'>Filip Čavić, student</a>": [1, 6, 8, 13, 16],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38565' target='_blank'>Tomislav Pukšec, izvanredni profesor</a>": [1, 4, 14, 15, 19],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38600' target='_blank'>Petra Sučić, studentica</a>": [1, 3, 12, 13, 17],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38661' target='_blank'>Ivan Stojanović, izvanredni profesor</a>": [2, 6, 8, 11, 12],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38701' target='_blank'>Zdenko Tonković, dekan</a>": [6, 11, 13, 15, 19],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38737' target='_blank'>Lea Perković, studentica</a>": [2, 10, 15, 16, 19],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38774' target='_blank'>Tea Žakula, izvanredna profesorica</a>": [12, 14, 17, 18, 19],
-            "<a href='https://www.fsb.unizg.hr/index.php?fsbonline&novosti&id=38851' target='_blank'>Marija Gudan, savjetnica</a>": [12, 14, 15, 18, 19],
-            "<a href='https://www.fsb.unizg.hr/index.php?novosti&id=39269' target='_blank'>Niko Vrgoč, student</a>": [1, 3, 4, 16, 17]
-        };
-
-        function izracunajRezultat() {
-            const odabranaPitanja = [];
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-
-            checkboxes.forEach(checkbox => {
-                odabranaPitanja.push(parseInt(checkbox.value));
-            });
-
-            if (odabranaPitanja.length !== 5) {
-                alert("Odaberi točno 5 pitanja.");
-                return;
-            }
-
-            let najboljaOsoba = "";
-            let najvisePodudaranja = 0;
-
-            for (let osoba in osobe) {
-                let podudaranje = osobe[osoba].filter(pitanje => odabranaPitanja.includes(pitanje)).length;
-                if (podudaranje > najvisePodudaranja) {
-                    najvisePodudaranja = podudaranje;
-                    najboljaOsoba = osoba;
-                }
-            }
-
-            const rezultatDiv = document.getElementById("rezultat");
-            rezultatDiv.innerHTML = `Najviše nalikuješ osobi: ${najboljaOsoba}`;
-            rezultatDiv.classList.add("show");
-        }
-    </script>
 </head>
 <body>
-    <h1>Kviz: Na kojeg Humansa najviše nalikuješ?</h1>
-    <p>Označi točno 5 izjava koje se odnose na tebe:</p>
-    <form id="kvizForm">
-        <label><input type="checkbox" value="1"> Volim rješavati složene zadatke koji zahtijevaju puno razmišljanja.</label>
-        <label><input type="checkbox" value="2"> Bavim se sportom i mogu balansirati više obaveza odjednom.</label>
-        <label><input type="checkbox" value="3"> Odmalena sam bio zainteresiran za pokuse i znanstvene projekte.</label>
-        <label><input type="checkbox" value="4"> Volim primjenjivati znanje u praksi kroz razne projekte.</label>
-        <label><input type="checkbox" value="5"> Imam strast za energetikom i želju za radom na važnim društvenim izazovima.</label>
-        <label><input type="checkbox" value="6"> Aktivna sam osoba u studentskim organizacijama i doprinosim promjenama.</label>
-        <label><input type="checkbox" value="7"> Zanimaju me kreativni projekti koji kombiniraju razne interese, poput glazbe i inženjerstva.</label>
-        <label><input type="checkbox" value="8"> Otvoren sam za inovacije i nove pristupe rješavanju problema.</label>
-        <label><input type="checkbox" value="9"> Svojim radom želim doprinijeti očuvanju okoliša.</label>
-        <label><input type="checkbox" value="10"> Zanima me tehnička strana projektiranja i proizvodnje.</label>
-        <label><input type="checkbox" value="11"> Volim dijeliti znanje i iskustvo s drugima kroz predavanja.</label>
-        <label><input type="checkbox" value="12"> Imam iskustva u radu na istraživačkim projektima.</label>
-        <label><input type="checkbox" value="13"> Važna mi je primjena teorije u praksi.</label>
-        <label><input type="checkbox" value="14"> Stručan sam u analizi i razvoju održivih energetskih sustava.</label>
-        <label><input type="checkbox" value="15"> Volim raditi s mladima i motivirati ih u njihovom razvoju.</label>
-        <label><input type="checkbox" value="16"> Vješt sam u komunikaciji i povezivanju s raznim ljudima.</label>
-        <label><input type="checkbox" value="17"> Otvoren/a sam za učenje novih vještina i tehnologija.</label>
-        <label><input type="checkbox" value="18"> Zanima me rad u multidisciplinarnom okruženju.</label>
-        <label><input type="checkbox" value="19"> Želim doprinositi razvoju obrazovanja i prijenosu znanja.</label>
-        <button type="button" onclick="izracunajRezultat()">Saznaj rezultat</button>
+    <h1>Kviz - Odaberi 3 tvrdnje</h1>
+    <form id="quizForm">
+        <div class="question">
+            <input type="checkbox" name="answer" value="1"> Volim rješavati složene zadatke.
+        </div>
+        <div class="question">
+            <input type="checkbox" name="answer" value="2"> Uživam u timskom radu.
+        </div>
+        <div class="question">
+            <input type="checkbox" name="answer" value="3"> Fasciniraju me novi izazovi.
+        </div>
+        <div class="question">
+            <input type="checkbox" name="answer" value="4"> Volim raditi istraživanja.
+        </div>
+        <div class="question">
+            <input type="checkbox" name="answer" value="5"> Strastven/a sam prema inovacijama.
+        </div>
+        
+        <button type="submit">Pošalji</button>
     </form>
-    <div id="rezultat"></div>
+    
+    <div class="result" id="result"></div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("quizForm");
+            const resultDiv = document.getElementById("result");
+            const checkboxes = document.querySelectorAll("input[name='answer']");
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", function() {
+                    const checkedCount = document.querySelectorAll("input[name='answer']:checked").length;
+                    if (checkedCount > 3) {
+                        this.checked = false;
+                        alert("Možete odabrati samo 3 tvrdnje!");
+                    }
+                });
+            });
+            
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const selected = [...document.querySelectorAll("input[name='answer']:checked")] 
+                                     .map(cb => cb.value);
+                if (selected.length !== 3) {
+                    alert("Molimo odaberite točno 3 tvrdnje!");
+                    return;
+                }
+                
+                // Prikaz rezultata odmah
+                resultDiv.style.display = "block";
+                resultDiv.innerHTML = "Najviše nalikujete osobi: <b>Ime Osobe</b>";
+            });
+        });
+    </script>
 </body>
 </html>
